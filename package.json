@@ -1,6 +1,6 @@
 {
   "name": "swedish-medications",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Swedish medication lookup skill for OpenClaw agents - FASS database integration",
   "main": "scripts/fass_lookup.js",
   "bin": {
