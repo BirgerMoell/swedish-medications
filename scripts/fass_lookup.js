@@ -9,11 +9,30 @@
  *   node fass_lookup.js "alvedon 500mg"
  */
 
-const https = require('https');
-const url = require('url');
+const fs = require('fs');
+const path = require('path');
 
-// Common Swedish medications database
-const COMMON_MEDICATIONS = {
+// Load full medications database
+const DATA_DIR = path.join(__dirname, '..', 'data');
+let FULL_DATABASE = [];
+let SUBSTANCES_INDEX = {};
+
+try {
+  const medsPath = path.join(DATA_DIR, 'medications.json');
+  const subsPath = path.join(DATA_DIR, 'substances.json');
+  
+  if (fs.existsSync(medsPath)) {
+    FULL_DATABASE = JSON.parse(fs.readFileSync(medsPath, 'utf8'));
+  }
+  if (fs.existsSync(subsPath)) {
+    SUBSTANCES_INDEX = JSON.parse(fs.readFileSync(subsPath, 'utf8'));
+  }
+} catch (e) {
+  // Database not available, will use curated list only
+}
+
+// Curated medications with extra info (use, warnings, dosage)
+const CURATED_MEDICATIONS = {
   // === PAIN & FEVER ===
   paracetamol: {
     brands: ['Alvedon', 'Panodil', 'Pamol'],
@@ -38,14 +57,6 @@ const COMMON_MEDICATIONS = {
     otc: 'Gel OTC, tablets Rx',
     warnings: 'Cardiovascular risk with long-term use',
     atc: 'M01AB05'
-  },
-  acetylsalicylsyra: {
-    brands: ['Treo', 'Aspirin', 'Magnecyl'],
-    use: 'Pain, fever, headache',
-    dose: 'Adult: 500-1000mg every 4-6h',
-    otc: true,
-    warnings: 'Not for children, risk of stomach bleeding',
-    atc: 'N02BA01'
   },
   naproxen: {
     brands: ['Naproxen', 'Pronaxen'],
@@ -81,14 +92,6 @@ const COMMON_MEDICATIONS = {
     warnings: 'Non-drowsy, active metabolite of loratadin',
     atc: 'R06AX27'
   },
-  mometason: {
-    brands: ['Nasonex', 'Mometason'],
-    use: 'Nasal allergies, congestion',
-    dose: 'Adult: 2 sprays per nostril once daily',
-    otc: false,
-    warnings: 'Nasal steroid, use regularly for best effect',
-    atc: 'R01AD09'
-  },
 
   // === STOMACH & DIGESTION ===
   omeprazol: {
@@ -107,22 +110,6 @@ const COMMON_MEDICATIONS = {
     warnings: 'Do not use if fever or bloody stools',
     atc: 'A07DA03'
   },
-  makrogol: {
-    brands: ['Movicol', 'Laxido'],
-    use: 'Constipation',
-    dose: 'Adult: 1-3 sachets daily',
-    otc: true,
-    warnings: 'Drink plenty of fluids',
-    atc: 'A06AD65'
-  },
-  natriumpikosulfat: {
-    brands: ['Laxoberal', 'Cilaxoral'],
-    use: 'Constipation',
-    dose: 'Adult: 5-10mg at bedtime',
-    otc: true,
-    warnings: 'Stimulant laxative, not for long-term use',
-    atc: 'A06AB08'
-  },
 
   // === MENTAL HEALTH ===
   sertralin: {
@@ -140,30 +127,6 @@ const COMMON_MEDICATIONS = {
     otc: false,
     warnings: 'Takes 2-4 weeks for effect, do not stop abruptly',
     atc: 'N06AB10'
-  },
-  hydroxizin: {
-    brands: ['Atarax', 'Hydroxizin'],
-    use: 'Anxiety, itching, sleep aid',
-    dose: 'Adult: 25-100mg/day in divided doses',
-    otc: false,
-    warnings: 'Causes drowsiness, avoid driving',
-    atc: 'N05BB01'
-  },
-  propiomazin: {
-    brands: ['Propavan'],
-    use: 'Short-term insomnia',
-    dose: 'Adult: 25mg at bedtime',
-    otc: false,
-    warnings: 'Short-term use only, may cause morning drowsiness',
-    atc: 'N05CM06'
-  },
-  zopiklon: {
-    brands: ['Imovane', 'Zopiklon'],
-    use: 'Short-term insomnia',
-    dose: 'Adult: 5-7.5mg at bedtime',
-    otc: false,
-    warnings: 'Risk of dependence, short-term use only',
-    atc: 'N05CF01'
   },
   mirtazapin: {
     brands: ['Remeron', 'Mirtazapin'],
@@ -207,14 +170,6 @@ const COMMON_MEDICATIONS = {
     warnings: 'Takes 4-6 weeks for full effect, not a controlled substance',
     atc: 'N06BA09'
   },
-  dexamfetamin: {
-    brands: ['Attentin'],
-    use: 'ADHD',
-    dose: 'Adult: 5-20mg 2-3 times daily',
-    otc: false,
-    warnings: 'Controlled substance, fast-acting',
-    atc: 'N06BA02'
-  },
 
   // === HEART & BLOOD PRESSURE ===
   metoprolol: {
@@ -224,30 +179,6 @@ const COMMON_MEDICATIONS = {
     otc: false,
     warnings: 'Beta-blocker, do not stop abruptly',
     atc: 'C07AB02'
-  },
-  enalapril: {
-    brands: ['Renitec', 'Enalapril'],
-    use: 'High blood pressure, heart failure',
-    dose: 'Adult: 5-40mg once daily',
-    otc: false,
-    warnings: 'ACE inhibitor, may cause dry cough',
-    atc: 'C09AA02'
-  },
-  amlodipin: {
-    brands: ['Norvasc', 'Amlodipin'],
-    use: 'High blood pressure, angina',
-    dose: 'Adult: 5-10mg once daily',
-    otc: false,
-    warnings: 'Calcium channel blocker, may cause ankle swelling',
-    atc: 'C08CA01'
-  },
-  simvastatin: {
-    brands: ['Zocord', 'Simvastatin'],
-    use: 'High cholesterol',
-    dose: 'Adult: 10-40mg once daily at bedtime',
-    otc: false,
-    warnings: 'Statin, avoid grapefruit, report muscle pain',
-    atc: 'C10AA01'
   },
   atorvastatin: {
     brands: ['Lipitor', 'Atorvastatin'],
@@ -265,22 +196,6 @@ const COMMON_MEDICATIONS = {
     warnings: 'Requires regular blood tests, many drug/food interactions',
     atc: 'B01AA03'
   },
-  apixaban: {
-    brands: ['Eliquis'],
-    use: 'Blood clot prevention, atrial fibrillation',
-    dose: 'Adult: 2.5-5mg twice daily',
-    otc: false,
-    warnings: 'NOAC, no routine monitoring needed',
-    atc: 'B01AF02'
-  },
-  trombyl: {
-    brands: ['Trombyl'],
-    use: 'Blood clot prevention (low-dose aspirin)',
-    dose: 'Adult: 75mg once daily',
-    otc: false,
-    warnings: 'Take with food, risk of bleeding',
-    atc: 'B01AC06'
-  },
 
   // === DIABETES ===
   metformin: {
@@ -291,32 +206,8 @@ const COMMON_MEDICATIONS = {
     warnings: 'Monitor kidney function, stop before contrast imaging',
     atc: 'A10BA02'
   },
-  empagliflozin: {
-    brands: ['Jardiance'],
-    use: 'Type 2 diabetes, heart failure',
-    dose: 'Adult: 10-25mg once daily',
-    otc: false,
-    warnings: 'SGLT2 inhibitor, risk of genital infections, stay hydrated',
-    atc: 'A10BK03'
-  },
-  insulinaspart: {
-    brands: ['NovoRapid', 'Fiasp'],
-    use: 'Diabetes (rapid-acting insulin)',
-    dose: 'Individualized, given with meals',
-    otc: false,
-    warnings: 'Fast-acting, risk of hypoglycemia',
-    atc: 'A10AB05'
-  },
-  insulinglargin: {
-    brands: ['Lantus', 'Toujeo'],
-    use: 'Diabetes (long-acting insulin)',
-    dose: 'Individualized, once daily',
-    otc: false,
-    warnings: 'Long-acting basal insulin, do not mix with other insulins',
-    atc: 'A10AE04'
-  },
 
-  // === ASTHMA & COPD ===
+  // === ASTHMA ===
   salbutamol: {
     brands: ['Ventoline', 'Airomir', 'Buventol'],
     use: 'Asthma relief, bronchospasm',
@@ -324,38 +215,6 @@ const COMMON_MEDICATIONS = {
     otc: false,
     warnings: 'Rescue inhaler, if using frequently see doctor',
     atc: 'R03AC02'
-  },
-  budesonid: {
-    brands: ['Pulmicort', 'Giona'],
-    use: 'Asthma prevention',
-    dose: 'Adult: 200-800mcg twice daily',
-    otc: false,
-    warnings: 'Inhaled steroid, rinse mouth after use',
-    atc: 'R03BA02'
-  },
-  budesonidformoterol: {
-    brands: ['Symbicort', 'Bufomix'],
-    use: 'Asthma and COPD maintenance',
-    dose: 'Adult: 1-2 puffs twice daily',
-    otc: false,
-    warnings: 'Combination inhaler, rinse mouth after use',
-    atc: 'R03AK07'
-  },
-  terbutalin: {
-    brands: ['Bricanyl'],
-    use: 'Asthma relief, bronchospasm',
-    dose: 'Adult: 0.25-0.5mg as needed',
-    otc: false,
-    warnings: 'Rescue medication, available as inhaler or injection',
-    atc: 'R03AC03'
-  },
-  montelukast: {
-    brands: ['Singulair', 'Montelukast'],
-    use: 'Asthma, allergic rhinitis',
-    dose: 'Adult: 10mg once daily at bedtime',
-    otc: false,
-    warnings: 'Leukotriene inhibitor, watch for mood changes',
-    atc: 'R03DC03'
   },
 
   // === ANTIBIOTICS ===
@@ -367,38 +226,6 @@ const COMMON_MEDICATIONS = {
     warnings: 'Complete full course, check for penicillin allergy',
     atc: 'J01CA04'
   },
-  fenoximetylpenicillin: {
-    brands: ['Kåvepenin', 'Tikacillin'],
-    use: 'Strep throat, ear infections, mild infections',
-    dose: 'Adult: 1g 2-3 times daily',
-    otc: false,
-    warnings: 'Penicillin V, take on empty stomach',
-    atc: 'J01CE02'
-  },
-  azitromycin: {
-    brands: ['Azitromax', 'Azitromycin'],
-    use: 'Respiratory infections, STIs',
-    dose: 'Adult: 500mg day 1, then 250mg days 2-5',
-    otc: false,
-    warnings: 'Macrolide antibiotic, short course',
-    atc: 'J01FA10'
-  },
-  ciprofloxacin: {
-    brands: ['Ciproxin', 'Ciprofloxacin'],
-    use: 'UTIs, GI infections, severe infections',
-    dose: 'Adult: 250-750mg twice daily',
-    otc: false,
-    warnings: 'Fluoroquinolone, risk of tendon damage, avoid in elderly',
-    atc: 'J01MA02'
-  },
-  nitrofurantoin: {
-    brands: ['Furadantin', 'Nitrofurantoin'],
-    use: 'Urinary tract infections',
-    dose: 'Adult: 50mg 4x/day or 100mg 2x/day',
-    otc: false,
-    warnings: 'Take with food, may turn urine dark',
-    atc: 'J01XE01'
-  },
 
   // === THYROID ===
   levotyroxin: {
@@ -408,57 +235,130 @@ const COMMON_MEDICATIONS = {
     otc: false,
     warnings: 'Take on empty stomach, 30-60min before breakfast',
     atc: 'H03AA01'
-  },
-
-  // === OTHER COMMON ===
-  allopurinol: {
-    brands: ['Allopurinol', 'Zyloric'],
-    use: 'Gout prevention',
-    dose: 'Adult: 100-300mg once daily',
-    otc: false,
-    warnings: 'May trigger gout attack initially, drink plenty of fluids',
-    atc: 'M04AA01'
-  },
-  gabapentin: {
-    brands: ['Neurontin', 'Gabapentin'],
-    use: 'Nerve pain, epilepsy',
-    dose: 'Adult: 300-3600mg/day in divided doses',
-    otc: false,
-    warnings: 'May cause dizziness and drowsiness',
-    atc: 'N03AX12'
-  },
-  pregabalin: {
-    brands: ['Lyrica', 'Pregabalin'],
-    use: 'Nerve pain, anxiety, epilepsy',
-    dose: 'Adult: 150-600mg/day in divided doses',
-    otc: false,
-    warnings: 'Controlled substance, may cause dizziness and weight gain',
-    atc: 'N03AX16'
   }
 };
 
 /**
- * Search for medication in local database
+ * Search in full database
  */
-function findMedication(query) {
+function searchFullDatabase(query) {
+  if (FULL_DATABASE.length === 0) return [];
+  
+  const queryLower = query.toLowerCase().trim();
+  const results = [];
+  
+  for (const med of FULL_DATABASE) {
+    // Match by name
+    if (med.nameNormalized && med.nameNormalized.includes(queryLower)) {
+      results.push(med);
+      continue;
+    }
+    // Match by substance
+    if (med.activeSubstances) {
+      for (const sub of med.activeSubstances) {
+        if (sub.toLowerCase().includes(queryLower)) {
+          results.push(med);
+          break;
+        }
+      }
+    }
+  }
+  
+  // Sort by relevance (exact matches first, then by name length)
+  results.sort((a, b) => {
+    const aExact = a.nameNormalized === queryLower ? 0 : 1;
+    const bExact = b.nameNormalized === queryLower ? 0 : 1;
+    if (aExact !== bExact) return aExact - bExact;
+    return a.name.length - b.name.length;
+  });
+  
+  return results.slice(0, 10); // Return top 10
+}
+
+/**
+ * Search for medication in curated database
+ */
+function findCuratedMedication(query) {
   const queryLower = query.toLowerCase().trim();
   
-  for (const [medName, info] of Object.entries(COMMON_MEDICATIONS)) {
-    // Check exact match on substance name
+  for (const [medName, info] of Object.entries(CURATED_MEDICATIONS)) {
     if (queryLower === medName) {
       return { name: medName, ...info };
     }
-    // Check brand names
     if (info.brands.some(b => b.toLowerCase() === queryLower)) {
       return { name: medName, ...info };
     }
-    // Check partial match
     if (medName.includes(queryLower) || 
         info.brands.some(b => b.toLowerCase().includes(queryLower))) {
       return { name: medName, ...info };
     }
   }
   return null;
+}
+
+/**
+ * Combined search - curated first, then full database
+ */
+function findMedication(query) {
+  // Try curated first (has extra info)
+  const curated = findCuratedMedication(query);
+  if (curated) return curated;
+  
+  // Fall back to full database
+  const dbResults = searchFullDatabase(query);
+  if (dbResults.length > 0) {
+    const med = dbResults[0];
+    return {
+      name: med.name,
+      brands: [med.name],
+      use: med.summary || `${med.form || ''} ${med.strength || ''}`.trim(),
+      dose: med.strength || '',
+      otc: !med.prescriptionRequired,
+      warnings: med.prescriptionRequired ? 'Prescription required (receptbelagt)' : 'OTC (receptfritt)',
+      atc: med.atcCode || '',
+      substances: med.activeSubstances || [],
+      manufacturer: med.manufacturer || '',
+      form: med.form || '',
+      fromDatabase: true
+    };
+  }
+  
+  return null;
+}
+
+/**
+ * Search and return multiple results
+ */
+function searchMedications(query, limit = 10) {
+  const results = [];
+  
+  // Search curated
+  const queryLower = query.toLowerCase().trim();
+  for (const [medName, info] of Object.entries(CURATED_MEDICATIONS)) {
+    if (medName.includes(queryLower) || 
+        info.brands.some(b => b.toLowerCase().includes(queryLower))) {
+      results.push({ name: medName, ...info, curated: true });
+    }
+  }
+  
+  // Search full database
+  const dbResults = searchFullDatabase(query);
+  for (const med of dbResults) {
+    // Avoid duplicates
+    if (!results.some(r => r.atc === med.atcCode && r.name.toLowerCase() === med.name.toLowerCase())) {
+      results.push({
+        name: med.name,
+        use: med.summary || '',
+        dose: med.strength || '',
+        otc: !med.prescriptionRequired,
+        atc: med.atcCode || '',
+        substances: med.activeSubstances || [],
+        fromDatabase: true
+      });
+    }
+  }
+  
+  return results.slice(0, limit);
 }
 
 /**
@@ -469,13 +369,62 @@ function formatMedication(med) {
     : med.otc === false ? 'No (receptbelagt)' 
     : med.otc;
   
-  return `### ${med.name.charAt(0).toUpperCase() + med.name.slice(1)} (${med.brands.join(', ')})
+  let output = `### ${med.name.charAt(0).toUpperCase() + med.name.slice(1)}`;
+  
+  if (med.brands && med.brands.length > 0 && med.brands[0] !== med.name) {
+    output += ` (${med.brands.join(', ')})`;
+  }
+  
+  output += '\n\n';
+  
+  if (med.substances && med.substances.length > 0) {
+    output += `**Active substances:** ${med.substances.join(', ')}\n`;
+  }
+  
+  output += `**Use:** ${med.use}\n`;
+  
+  if (med.dose) {
+    output += `**Dosage:** ${med.dose}\n`;
+  }
+  
+  output += `**OTC:** ${otcStatus}\n`;
+  
+  if (med.atc) {
+    output += `**ATC Code:** ${med.atc}\n`;
+  }
+  
+  if (med.warnings && !med.fromDatabase) {
+    output += `**Warnings:** ${med.warnings}`;
+  }
+  
+  if (med.manufacturer) {
+    output += `**Manufacturer:** ${med.manufacturer}\n`;
+  }
+  
+  return output;
+}
 
-**Use:** ${med.use}
-**Dosage:** ${med.dose}
-**OTC:** ${otcStatus}
-**ATC Code:** ${med.atc}
-**Warnings:** ${med.warnings}`;
+/**
+ * Format multiple results
+ */
+function formatSearchResults(results, query) {
+  if (results.length === 0) {
+    return `No medications found for "${query}".`;
+  }
+  
+  let output = `## Found ${results.length} medication(s) for "${query}"\n\n`;
+  
+  for (const med of results) {
+    const rx = med.otc ? '🟢 OTC' : '🔴 Rx';
+    output += `- **${med.name}** ${rx}`;
+    if (med.atc) output += ` [${med.atc}]`;
+    if (med.substances && med.substances.length > 0) {
+      output += ` — ${med.substances.join(', ')}`;
+    }
+    output += '\n';
+  }
+  
+  return output;
 }
 
 /**
@@ -498,7 +447,7 @@ function lookupMedication(query) {
     output.push(formatMedication(med));
     output.push('');
   } else {
-    output.push(`No quick info available for "${query}" in local database.`);
+    output.push(`No quick info available for "${query}" in database.`);
     output.push('');
   }
   
@@ -518,8 +467,17 @@ function lookupMedication(query) {
 module.exports = {
   lookupMedication,
   findMedication,
+  searchMedications,
   getFassUrl,
-  COMMON_MEDICATIONS
+  CURATED_MEDICATIONS,
+  COMMON_MEDICATIONS: CURATED_MEDICATIONS, // Backward compatibility
+  FULL_DATABASE,
+  SUBSTANCES_INDEX,
+  getDatabaseStats: () => ({
+    curated: Object.keys(CURATED_MEDICATIONS).length,
+    full: FULL_DATABASE.length,
+    substances: Object.keys(SUBSTANCES_INDEX).length
+  })
 };
 
 // CLI execution
@@ -527,19 +485,18 @@ if (require.main === module) {
   const args = process.argv.slice(2);
   
   const showHelp = () => {
+    const stats = module.exports.getDatabaseStats();
     console.log('🇸🇪 Swedish Medications - FASS Lookup\n');
+    console.log(`Database: ${stats.curated} curated + ${stats.full} full database\n`);
     console.log('Usage: fass-lookup <medication_name>');
     console.log('       fass-lookup paracetamol');
     console.log('       fass-lookup Alvedon');
-    console.log('       fass-lookup "alvedon 500mg"\n');
+    console.log('       fass-lookup --search "blood pressure"\n');
     console.log('Options:');
     console.log('  -h, --help     Show this help message');
-    console.log('  -l, --list     List all medications in quick-lookup\n');
-    console.log('Available medications in quick-lookup:');
-    Object.keys(COMMON_MEDICATIONS).forEach(m => {
-      console.log(`  - ${m} (${COMMON_MEDICATIONS[m].brands.join(', ')})`);
-    });
-    console.log('\nFor medications not listed, a FASS.se search link is provided.');
+    console.log('  -s, --search   Search and show multiple results');
+    console.log('  -l, --list     List curated medications with extra info');
+    console.log('  --stats        Show database statistics\n');
   };
   
   if (args.length === 0 || args.includes('-h') || args.includes('--help')) {
@@ -547,13 +504,34 @@ if (require.main === module) {
     process.exit(0);
   }
   
+  if (args.includes('--stats')) {
+    const stats = module.exports.getDatabaseStats();
+    console.log('📊 Database Statistics:');
+    console.log(`   Curated medications (with dosage/warnings): ${stats.curated}`);
+    console.log(`   Full database entries: ${stats.full}`);
+    console.log(`   Indexed substances: ${stats.substances}`);
+    process.exit(0);
+  }
+  
   if (args.includes('-l') || args.includes('--list')) {
-    console.log('Available medications:\n');
-    Object.entries(COMMON_MEDICATIONS).forEach(([name, info]) => {
+    console.log('Curated medications (with extra info):\n');
+    Object.entries(CURATED_MEDICATIONS).forEach(([name, info]) => {
       console.log(`${name} (${info.brands.join(', ')})`);
       console.log(`  Use: ${info.use}`);
       console.log(`  OTC: ${info.otc === true ? 'Yes' : info.otc === false ? 'No (Rx)' : info.otc}\n`);
     });
+    process.exit(0);
+  }
+  
+  if (args.includes('-s') || args.includes('--search')) {
+    const searchIdx = args.indexOf('-s') !== -1 ? args.indexOf('-s') : args.indexOf('--search');
+    const query = args.slice(searchIdx + 1).join(' ');
+    if (!query) {
+      console.log('Usage: fass-lookup --search <query>');
+      process.exit(1);
+    }
+    const results = searchMedications(query, 20);
+    console.log(formatSearchResults(results, query));
     process.exit(0);
   }
   

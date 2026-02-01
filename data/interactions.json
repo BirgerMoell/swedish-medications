@@ -1,0 +1,338 @@
+{
+  "interactions": [
+    {
+      "drug1": "warfarin",
+      "drug2": "ibuprofen",
+      "severity": "D",
+      "descriptionSv": "Ökad blödningsrisk. NSAIDs hämmar trombocytfunktionen och kan öka warfarins antikoagulanteffekt.",
+      "descriptionEn": "Increased bleeding risk. NSAIDs inhibit platelet function and may enhance warfarin's anticoagulant effect.",
+      "mechanism": "Pharmacodynamic + pharmacokinetic",
+      "recommendationSv": "Undvik kombination. Välj paracetamol istället om möjligt.",
+      "recommendationEn": "Avoid combination. Choose paracetamol instead if possible.",
+      "source": "curated"
+    },
+    {
+      "drug1": "warfarin",
+      "drug2": "diklofenak",
+      "severity": "D",
+      "descriptionSv": "Ökad blödningsrisk vid samtidig behandling med warfarin och diklofenak.",
+      "descriptionEn": "Increased bleeding risk with concurrent warfarin and diclofenac treatment.",
+      "mechanism": "Pharmacodynamic + pharmacokinetic",
+      "recommendationSv": "Undvik kombination. Välj paracetamol istället.",
+      "recommendationEn": "Avoid combination. Choose paracetamol instead.",
+      "source": "curated"
+    },
+    {
+      "drug1": "warfarin",
+      "drug2": "acetylsalicylsyra",
+      "severity": "D",
+      "descriptionSv": "Kraftigt ökad blödningsrisk vid kombination av warfarin och ASA.",
+      "descriptionEn": "Significantly increased bleeding risk with warfarin and ASA combination.",
+      "mechanism": "Pharmacodynamic synergy",
+      "recommendationSv": "Kombination endast på stark indikation under noggrann övervakning.",
+      "recommendationEn": "Combination only with strong indication under careful monitoring.",
+      "source": "curated"
+    },
+    {
+      "drug1": "sertralin",
+      "drug2": "moklobemid",
+      "severity": "D",
+      "descriptionSv": "Risk för serotonergt syndrom - potentiellt livshotande tillstånd.",
+      "descriptionEn": "Risk of serotonin syndrome - potentially life-threatening condition.",
+      "mechanism": "Excessive serotonergic activity",
+      "recommendationSv": "Kontraindicerat. Minst 14 dagars uppehåll vid byte.",
+      "recommendationEn": "Contraindicated. At least 14 days washout when switching.",
+      "source": "curated"
+    },
+    {
+      "drug1": "sertralin",
+      "drug2": "ibuprofen",
+      "severity": "C",
+      "descriptionSv": "Ökad risk för gastrointestinal blödning. SSRIs påverkar trombocytfunktionen.",
+      "descriptionEn": "Increased risk of gastrointestinal bleeding. SSRIs affect platelet function.",
+      "mechanism": "Both affect platelet aggregation",
+      "recommendationSv": "Överväg gastroprotektion med PPI vid längre behandling.",
+      "recommendationEn": "Consider gastroprotection with PPI for longer treatment.",
+      "source": "curated"
+    },
+    {
+      "drug1": "enalapril",
+      "drug2": "kalium",
+      "severity": "C",
+      "descriptionSv": "Risk för hyperkalemi. ACE-hämmare minskar aldosteronproduktionen.",
+      "descriptionEn": "Risk of hyperkalemia. ACE inhibitors reduce aldosterone production.",
+      "mechanism": "Reduced potassium excretion",
+      "recommendationSv": "Kontrollera S-kalium regelbundet.",
+      "recommendationEn": "Monitor serum potassium regularly.",
+      "source": "curated"
+    },
+    {
+      "drug1": "enalapril",
+      "drug2": "spironolakton",
+      "severity": "C",
+      "descriptionSv": "Ökad risk för hyperkalemi vid kombination av ACE-hämmare och kaliumsparande diuretika.",
+      "descriptionEn": "Increased hyperkalemia risk with ACE inhibitor and potassium-sparing diuretic.",
+      "mechanism": "Additive potassium retention",
+      "recommendationSv": "Noggrann monitorering av S-kalium krävs.",
+      "recommendationEn": "Careful monitoring of serum potassium required.",
+      "source": "curated"
+    },
+    {
+      "drug1": "metformin",
+      "drug2": "kontrastmedel",
+      "severity": "C",
+      "descriptionSv": "Risk för laktacidos. Metformin bör sättas ut före kontrastundersökning.",
+      "descriptionEn": "Risk of lactic acidosis. Metformin should be discontinued before contrast examination.",
+      "mechanism": "Contrast-induced nephropathy may impair metformin clearance",
+      "recommendationSv": "Sätt ut metformin 48 timmar före och efter kontrastundersökning.",
+      "recommendationEn": "Discontinue metformin 48 hours before and after contrast examination.",
+      "source": "curated"
+    },
+    {
+      "drug1": "kodein",
+      "drug2": "oxazepam",
+      "severity": "D",
+      "descriptionSv": "Allvarlig risk för andningsdepression och sedering vid kombination av opioider och bensodiazepiner.",
+      "descriptionEn": "Serious risk of respiratory depression and sedation with opioid and benzodiazepine combination.",
+      "mechanism": "CNS depressant synergy",
+      "recommendationSv": "Undvik kombination om möjligt. Vid nödvändig kombination: låga doser, kort tid, noggrann övervakning.",
+      "recommendationEn": "Avoid combination if possible. If necessary: low doses, short duration, careful monitoring.",
+      "source": "curated"
+    },
+    {
+      "drug1": "tramadol",
+      "drug2": "oxazepam",
+      "severity": "D",
+      "descriptionSv": "Allvarlig risk för andningsdepression vid kombination av tramadol och bensodiazepiner.",
+      "descriptionEn": "Serious risk of respiratory depression with tramadol and benzodiazepine combination.",
+      "mechanism": "CNS depressant synergy",
+      "recommendationSv": "Undvik kombination om möjligt.",
+      "recommendationEn": "Avoid combination if possible.",
+      "source": "curated"
+    },
+    {
+      "drug1": "litium",
+      "drug2": "ibuprofen",
+      "severity": "C",
+      "descriptionSv": "NSAIDs kan öka litiumkoncentrationen genom minskad renal utsöndring.",
+      "descriptionEn": "NSAIDs may increase lithium levels by decreasing renal excretion.",
+      "mechanism": "Reduced renal lithium clearance",
+      "recommendationSv": "Kontrollera S-litium vid insättning/utsättning av NSAIDs.",
+      "recommendationEn": "Monitor serum lithium when starting/stopping NSAIDs.",
+      "source": "curated"
+    },
+    {
+      "drug1": "litium",
+      "drug2": "enalapril",
+      "severity": "C",
+      "descriptionSv": "ACE-hämmare kan öka litiumkoncentrationen och orsaka litiumtoxicitet.",
+      "descriptionEn": "ACE inhibitors may increase lithium concentration and cause lithium toxicity.",
+      "mechanism": "Reduced renal lithium clearance",
+      "recommendationSv": "Kontrollera S-litium regelbundet vid kombination.",
+      "recommendationEn": "Monitor serum lithium regularly with combination.",
+      "source": "curated"
+    },
+    {
+      "drug1": "digoxin",
+      "drug2": "amiodaron",
+      "severity": "C",
+      "descriptionSv": "Amiodaron ökar digoxinkoncentrationen med 70-100%.",
+      "descriptionEn": "Amiodarone increases digoxin concentration by 70-100%.",
+      "mechanism": "P-glycoprotein inhibition",
+      "recommendationSv": "Halvera digoxindosen vid insättning av amiodaron.",
+      "recommendationEn": "Halve digoxin dose when starting amiodarone.",
+      "source": "curated"
+    },
+    {
+      "drug1": "digoxin",
+      "drug2": "verapamil",
+      "severity": "C",
+      "descriptionSv": "Verapamil ökar digoxinkoncentrationen och förstärker AV-bromsande effekt.",
+      "descriptionEn": "Verapamil increases digoxin concentration and enhances AV-blocking effect.",
+      "mechanism": "Pharmacokinetic + pharmacodynamic",
+      "recommendationSv": "Minska digoxindos och övervaka hjärtrytm.",
+      "recommendationEn": "Reduce digoxin dose and monitor heart rhythm.",
+      "source": "curated"
+    },
+    {
+      "drug1": "atorvastatin",
+      "drug2": "erytromycin",
+      "severity": "C",
+      "descriptionSv": "Ökad risk för myopati och rabdomyolys. Makrolider hämmar CYP3A4.",
+      "descriptionEn": "Increased risk of myopathy and rhabdomyolysis. Macrolides inhibit CYP3A4.",
+      "mechanism": "CYP3A4 inhibition",
+      "recommendationSv": "Överväg statinuppehåll under kort antibiotikabehandling.",
+      "recommendationEn": "Consider statin pause during short antibiotic treatment.",
+      "source": "curated"
+    },
+    {
+      "drug1": "simvastatin",
+      "drug2": "klaritromycin",
+      "severity": "D",
+      "descriptionSv": "Kontraindicerat. Kraftigt ökad risk för rabdomyolys.",
+      "descriptionEn": "Contraindicated. Greatly increased risk of rhabdomyolysis.",
+      "mechanism": "CYP3A4 inhibition",
+      "recommendationSv": "Välj annan antibiotika eller statinuppehåll.",
+      "recommendationEn": "Choose different antibiotic or pause statin.",
+      "source": "curated"
+    },
+    {
+      "drug1": "metotrexat",
+      "drug2": "ibuprofen",
+      "severity": "C",
+      "descriptionSv": "NSAIDs kan minska renal utsöndring av metotrexat och öka toxiciteten.",
+      "descriptionEn": "NSAIDs may decrease renal excretion of methotrexate and increase toxicity.",
+      "mechanism": "Reduced renal clearance",
+      "recommendationSv": "Undvik höga doser NSAIDs. Monitorera metotrexatkoncentration.",
+      "recommendationEn": "Avoid high-dose NSAIDs. Monitor methotrexate concentration.",
+      "source": "curated"
+    },
+    {
+      "drug1": "warfarin",
+      "drug2": "paracetamol",
+      "severity": "B",
+      "descriptionSv": "Paracetamol i höga doser (>2g/dag) kan öka INR.",
+      "descriptionEn": "High-dose paracetamol (>2g/day) may increase INR.",
+      "mechanism": "VKORC1 inhibition",
+      "recommendationSv": "Säkrare alternativ än NSAIDs. Kontrollera INR vid regelbunden användning.",
+      "recommendationEn": "Safer alternative than NSAIDs. Monitor INR with regular use.",
+      "source": "curated"
+    },
+    {
+      "drug1": "pregabalin",
+      "drug2": "kodein",
+      "severity": "C",
+      "descriptionSv": "Ökad risk för CNS-depression och andningspåverkan vid kombination.",
+      "descriptionEn": "Increased risk of CNS depression and respiratory effects when combined.",
+      "mechanism": "Additive CNS depression",
+      "recommendationSv": "Försiktighet vid kombination, övervaka patienten.",
+      "recommendationEn": "Caution when combining, monitor patient.",
+      "source": "curated"
+    },
+    {
+      "drug1": "tramadol",
+      "drug2": "sertralin",
+      "severity": "C",
+      "descriptionSv": "Risk för serotonergt syndrom och sänkt kramptröskel vid kombination.",
+      "descriptionEn": "Risk of serotonin syndrome and lowered seizure threshold when combined.",
+      "mechanism": "Serotonergic synergy",
+      "recommendationSv": "Överväg alternativ smärtlindring.",
+      "recommendationEn": "Consider alternative pain relief.",
+      "source": "curated"
+    }
+  ],
+  "index": {
+    "warfarin": [
+      0,
+      1,
+      2,
+      17
+    ],
+    "ibuprofen": [
+      0,
+      4,
+      10,
+      16
+    ],
+    "diklofenak": [
+      1
+    ],
+    "acetylsalicylsyra": [
+      2
+    ],
+    "sertralin": [
+      3,
+      4,
+      19
+    ],
+    "moklobemid": [
+      3
+    ],
+    "enalapril": [
+      5,
+      6,
+      11
+    ],
+    "kalium": [
+      5
+    ],
+    "spironolakton": [
+      6
+    ],
+    "metformin": [
+      7
+    ],
+    "kontrastmedel": [
+      7
+    ],
+    "kodein": [
+      8,
+      18
+    ],
+    "oxazepam": [
+      8,
+      9
+    ],
+    "tramadol": [
+      9,
+      19
+    ],
+    "litium": [
+      10,
+      11
+    ],
+    "digoxin": [
+      12,
+      13
+    ],
+    "amiodaron": [
+      12
+    ],
+    "verapamil": [
+      13
+    ],
+    "atorvastatin": [
+      14
+    ],
+    "erytromycin": [
+      14
+    ],
+    "simvastatin": [
+      15
+    ],
+    "klaritromycin": [
+      15
+    ],
+    "metotrexat": [
+      16
+    ],
+    "paracetamol": [
+      17
+    ],
+    "pregabalin": [
+      18
+    ]
+  },
+  "severityLegend": {
+    "A": {
+      "sv": "Interaktion utan klinisk betydelse",
+      "en": "No clinical significance",
+      "color": "green"
+    },
+    "B": {
+      "sv": "Interaktion som eventuellt kan ha klinisk betydelse",
+      "en": "Possible clinical significance",
+      "color": "yellow"
+    },
+    "C": {
+      "sv": "Interaktion som kan kräva dosanpassning",
+      "en": "May require dose adjustment",
+      "color": "orange"
+    },
+    "D": {
+      "sv": "Interaktion som bör undvikas",
+      "en": "Should be avoided",
+      "color": "red"
+    }
+  }
+}

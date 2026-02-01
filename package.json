@@ -38,6 +38,7 @@
   },
   "files": [
     "scripts/",
+    "data/",
     "references/",
     "SKILL.md",
     "README.md"
