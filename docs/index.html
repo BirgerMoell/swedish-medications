@@ -363,14 +363,18 @@ skills:
 <span class="comment"># Install globally</span>
 npm install -g swedish-medications
 
-<span class="comment"># Look up by substance</span>
+<span class="comment"># Look up any medication</span>
+fass-lookup Ozempic
+fass-lookup Concerta
 fass-lookup paracetamol
 
-<span class="comment"># Look up by brand name</span>
-fass-lookup Alvedon
+<span class="comment"># Search for multiple results</span>
+fass-lookup --search <span class="string">"insulin"</span>
+fass-lookup --search <span class="string">"blood pressure"</span>
 
-<span class="comment"># Multi-word queries</span>
-fass-lookup <span class="string">"alvedon 500mg"</span>
+<span class="comment"># Show database stats</span>
+fass-lookup --stats
+<span class="output"># → Curated: 23, Full: 9064, Substances: 1353</span>
                     </code>
                 </div>
             </div>
@@ -396,26 +400,63 @@ console.<span class="function">log</span>(med.dose);  <span class="comment">// "
         </section>
         
         <section>
+            <h2>💬 Example Use Cases</h2>
+            <p>Questions your AI agent can now answer:</p>
+            
+            <div class="features" style="margin-top: 1.5rem;">
+                <div class="feature-card">
+                    <h3>💊 "What is Ozempic?"</h3>
+                    <p>Get substance (semaglutid), use (diabetes/weight loss), manufacturer (Novo Nordisk), prescription status, and FASS link.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📋 "What ADHD medications are available?"</h3>
+                    <p>Search returns Concerta, Elvanse, Ritalin, Strattera, Attentin — with dosages and controlled substance warnings.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚖️ "Alvedon vs Ipren?"</h3>
+                    <p>Compare paracetamol vs ibuprofen — when to use each, max doses, stomach/liver warnings.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💉 "My doctor prescribed sertralin"</h3>
+                    <p>Explain what SSRIs do, 2-4 week onset, don't stop abruptly, common side effects.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔍 "Search insulin medications"</h3>
+                    <p>Multi-result search: Lantus, NovoRapid, Ozempic, Fiasp — with ATC codes and Rx status.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🇸🇪 "Är Voltaren receptfritt?"</h3>
+                    <p>Works in Swedish too — gel is OTC (receptfritt), tablets are Rx (receptbelagt).</p>
+                </div>
+            </div>
+        </section>
+        
+        <section>
             <h2>📖 API Reference</h2>
             
             <div class="api-method">
                 <h4>lookupMedication(query: string): string</h4>
-                <p>Returns formatted markdown with medication info, dosage, warnings, and FASS link. Perfect for chatbot responses.</p>
+                <p>Returns formatted markdown with medication info, dosage, warnings, and FASS link. Searches 9,064 medications.</p>
             </div>
             
             <div class="api-method">
                 <h4>findMedication(query: string): object | null</h4>
-                <p>Returns raw medication data object for programmatic use, or null if not found in the quick-lookup database.</p>
+                <p>Returns raw medication data object. Checks curated database first (with dosage/warnings), then full 9,064 medication database.</p>
+            </div>
+            
+            <div class="api-method">
+                <h4>searchMedications(query: string, limit?: number): array</h4>
+                <p><strong>New in v2.0!</strong> Returns multiple matching medications. Perfect for "show me all insulin medications" queries.</p>
+            </div>
+            
+            <div class="api-method">
+                <h4>getDatabaseStats(): object</h4>
+                <p><strong>New in v2.0!</strong> Returns { curated: 23, full: 9064, substances: 1353 } — database statistics.</p>
             </div>
             
             <div class="api-method">
                 <h4>getFassUrl(query: string): string</h4>
                 <p>Returns the FASS.se search URL for any medication query.</p>
-            </div>
-            
-            <div class="api-method">
-                <h4>COMMON_MEDICATIONS: object</h4>
-                <p>The raw medications database. Contains ~10 common Swedish medications with full details.</p>
             </div>
         </section>
         
