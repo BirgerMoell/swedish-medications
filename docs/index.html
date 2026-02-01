@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swedish Medications - FASS Lookup for AI Agents</title>
+    <meta name="description" content="Swedish medication lookup tool for AI agents. Integrates with OpenClaw, LangChain, and more. Look up FASS data, dosages, and drug information.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💊</text></svg>">
+    <style>
+        :root {
+            --primary: #006AA7;
+            --secondary: #FECC00;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --success: #28a745;
+            --code-bg: #0d1117;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #004a75 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hero .flag {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero .tagline {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .badges {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .badges img {
+            height: 24px;
+        }
+        
+        .install-box {
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 1.5rem 2rem;
+            display: inline-block;
+            max-width: 100%;
+        }
+        
+        .install-box code {
+            color: #7ee787;
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        section {
+            margin-bottom: 4rem;
+        }
+        
+        h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .code-block code {
+            color: #e6edf3;
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+        
+        .code-block .comment { color: #8b949e; }
+        .code-block .string { color: #a5d6ff; }
+        .code-block .keyword { color: #ff7b72; }
+        .code-block .function { color: #d2a8ff; }
+        .code-block .output { color: #7ee787; }
+        
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 0;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: #e9ecef;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 8px 8px 0 0;
+            color: var(--dark);
+            transition: all 0.2s;
+        }
+        
+        .tab:hover {
+            background: #dee2e6;
+        }
+        
+        .tab.active {
+            background: var(--code-bg);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-content .code-block {
+            border-radius: 0 8px 8px 8px;
+            margin-top: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        th {
+            background: var(--primary);
+            color: white;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 2rem 0;
+        }
+        
+        .warning-box h4 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin: 0.25rem;
+        }
+        
+        .btn:hover {
+            background: #005a8f;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: var(--dark);
+        }
+        
+        .btn-secondary:hover {
+            background: #2a2a4e;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        footer a {
+            color: var(--secondary);
+        }
+        
+        .api-method {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .api-method h4 {
+            font-family: 'SF Mono', Monaco, monospace;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .api-method p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .hero .tagline { font-size: 1rem; }
+            .install-box { padding: 1rem; }
+            .install-box code { font-size: 0.9rem; }
+            .tabs { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="flag">🇸🇪</div>
+        <h1>Swedish Medications</h1>
+        <p class="tagline">FASS medication lookup for AI agents and developers</p>
+        
+        <div class="badges">
+            <a href="https://www.npmjs.com/package/swedish-medications">
+                <img src="https://badge.fury.io/js/swedish-medications.svg" alt="npm version">
+            </a>
+            <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License">
+            <img src="https://img.shields.io/badge/OpenClaw-Skill-blue.svg" alt="OpenClaw Skill">
+        </div>
+        
+        <div class="install-box">
+            <code>npm install -g swedish-medications</code>
+        </div>
+    </div>
+    
+    <div class="container">
+        <section>
+            <h2>✨ Features</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <h3>🔍 Quick Lookup</h3>
+                    <p>Search Swedish medications by brand name or active substance. Alvedon → paracetamol, Ipren → ibuprofen.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💊 Key Information</h3>
+                    <p>Get dosage, warnings, OTC status, and ATC codes instantly. Links to official FASS documentation.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🤖 AI-Agent Ready</h3>
+                    <p>Works seamlessly with OpenClaw, LangChain, and custom agent frameworks as a tool/skill.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🇸🇪 Swedish Context</h3>
+                    <p>Built specifically for Swedish healthcare. Understands receptfritt/receptbelagt, Swedish brand names, and regional practices.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>🚀 Installation</h2>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('openclaw')">OpenClaw Agent</button>
+                <button class="tab" onclick="showTab('cli')">CLI Tool</button>
+                <button class="tab" onclick="showTab('library')">Node.js Library</button>
+            </div>
+            
+            <div id="openclaw" class="tab-content active">
+                <div class="code-block">
+                    <code>
+<span class="comment"># Install globally</span>
+npm install -g swedish-medications
+
+<span class="comment"># Add to your OpenClaw config (~/.openclaw/config.yaml)</span>
+skills:
+  - swedish-medications
+
+<span class="comment"># Your agent can now answer:</span>
+<span class="string">"What is Alvedon?"</span>
+<span class="string">"Tell me about sertralin side effects"</span>
+<span class="string">"Is Ipren prescription-only in Sweden?"</span>
+                    </code>
+                </div>
+            </div>
+            
+            <div id="cli" class="tab-content">
+                <div class="code-block">
+                    <code>
+<span class="comment"># Install globally</span>
+npm install -g swedish-medications
+
+<span class="comment"># Look up by substance</span>
+fass-lookup paracetamol
+
+<span class="comment"># Look up by brand name</span>
+fass-lookup Alvedon
+
+<span class="comment"># Multi-word queries</span>
+fass-lookup <span class="string">"alvedon 500mg"</span>
+                    </code>
+                </div>
+            </div>
+            
+            <div id="library" class="tab-content">
+                <div class="code-block">
+                    <code>
+<span class="comment">// Install as dependency</span>
+npm install swedish-medications
+
+<span class="comment">// Use in your code</span>
+<span class="keyword">const</span> { lookupMedication, findMedication } = <span class="function">require</span>(<span class="string">'swedish-medications'</span>);
+
+<span class="comment">// Get formatted markdown output</span>
+console.<span class="function">log</span>(<span class="function">lookupMedication</span>(<span class="string">'Alvedon'</span>));
+
+<span class="comment">// Get raw data object</span>
+<span class="keyword">const</span> med = <span class="function">findMedication</span>(<span class="string">'ibuprofen'</span>);
+console.<span class="function">log</span>(med.dose);  <span class="comment">// "Adult: 200-400mg every 4-6h..."</span>
+                    </code>
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2>📖 API Reference</h2>
+            
+            <div class="api-method">
+                <h4>lookupMedication(query: string): string</h4>
+                <p>Returns formatted markdown with medication info, dosage, warnings, and FASS link. Perfect for chatbot responses.</p>
+            </div>
+            
+            <div class="api-method">
+                <h4>findMedication(query: string): object | null</h4>
+                <p>Returns raw medication data object for programmatic use, or null if not found in the quick-lookup database.</p>
+            </div>
+            
+            <div class="api-method">
+                <h4>getFassUrl(query: string): string</h4>
+                <p>Returns the FASS.se search URL for any medication query.</p>
+            </div>
+            
+            <div class="api-method">
+                <h4>COMMON_MEDICATIONS: object</h4>
+                <p>The raw medications database. Contains ~10 common Swedish medications with full details.</p>
+            </div>
+        </section>
+        
+        <section>
+            <h2>💊 Supported Medications</h2>
+            <p>Quick-lookup database includes:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Substances</th>
+                        <th>Example Brands</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Pain & Fever</td>
+                        <td>Paracetamol, Ibuprofen, Diclofenac</td>
+                        <td>Alvedon, Ipren, Voltaren</td>
+                    </tr>
+                    <tr>
+                        <td>Allergies</td>
+                        <td>Loratadin, Cetirizin</td>
+                        <td>Clarityn, Zyrtec</td>
+                    </tr>
+                    <tr>
+                        <td>Stomach</td>
+                        <td>Omeprazol</td>
+                        <td>Losec</td>
+                    </tr>
+                    <tr>
+                        <td>Mental Health</td>
+                        <td>Sertralin</td>
+                        <td>Zoloft</td>
+                    </tr>
+                    <tr>
+                        <td>Diabetes</td>
+                        <td>Metformin</td>
+                        <td>Glucophage</td>
+                    </tr>
+                    <tr>
+                        <td>Cholesterol</td>
+                        <td>Atorvastatin</td>
+                        <td>Lipitor</td>
+                    </tr>
+                    <tr>
+                        <td>Antibiotics</td>
+                        <td>Amoxicillin</td>
+                        <td>Amimox</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p>For medications not in the quick-lookup database, the tool generates a FASS.se search link.</p>
+        </section>
+        
+        <section>
+            <h2>🤖 For AI Agent Developers</h2>
+            <p>Easily integrate with any agent framework:</p>
+            
+            <div class="code-block">
+                <code>
+<span class="keyword">const</span> { lookupMedication } = <span class="function">require</span>(<span class="string">'swedish-medications'</span>);
+
+<span class="comment">// Define as a tool for function calling</span>
+<span class="keyword">const</span> medicationTool = {
+  name: <span class="string">"swedish_medication_lookup"</span>,
+  description: <span class="string">"Look up Swedish medication information by name (brand or substance)"</span>,
+  parameters: {
+    type: <span class="string">"object"</span>,
+    properties: {
+      query: { 
+        type: <span class="string">"string"</span>, 
+        description: <span class="string">"Medication name to search for"</span> 
+      }
+    },
+    required: [<span class="string">"query"</span>]
+  },
+  <span class="function">execute</span>: (params) => <span class="function">lookupMedication</span>(params.query)
+};
+
+<span class="comment">// Works with OpenAI, Anthropic, LangChain, etc.</span>
+                </code>
+            </div>
+        </section>
+        
+        <div class="warning-box">
+            <h4>⚠️ Medical Disclaimer</h4>
+            <p>This tool provides <strong>information only</strong>, not medical advice. Always consult healthcare professionals for medical decisions. Check <a href="https://fass.se">FASS.se</a> for complete official information.</p>
+        </div>
+        
+        <section style="text-align: center;">
+            <h2>📦 Get Started</h2>
+            <a href="https://www.npmjs.com/package/swedish-medications" class="btn">View on npm</a>
+            <a href="https://github.com/birgermoell/swedish-medications" class="btn btn-secondary">GitHub Repo</a>
+        </section>
+    </div>
+    
+    <footer>
+        <p>Made with 🇸🇪 by <a href="https://github.com/birgermoell">Birger Moëll</a></p>
+        <p style="margin-top: 1rem; opacity: 0.7;">
+            Data sources: <a href="https://fass.se">FASS.se</a> • 
+            <a href="https://lakemedelsverket.se">Läkemedelsverket</a> • 
+            <a href="https://1177.se">1177.se</a>
+        </p>
+        <p style="margin-top: 1rem; opacity: 0.5;">
+            Built for <a href="https://openclaw.ai">OpenClaw</a> agents
+        </p>
+    </footer>
+    
+    <script>
+        function showTab(tabId) {
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+            
+            // Show selected
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

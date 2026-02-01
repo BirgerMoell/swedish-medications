@@ -1,0 +1,45 @@
+{
+  "name": "swedish-medications",
+  "version": "1.0.0",
+  "description": "Swedish medication lookup skill for OpenClaw agents - FASS database integration",
+  "main": "scripts/fass_lookup.js",
+  "bin": {
+    "fass-lookup": "scripts/fass_lookup.js"
+  },
+  "scripts": {
+    "lookup": "node scripts/fass_lookup.js",
+    "test": "node test/fass_lookup.test.js",
+    "start": "node scripts/fass_lookup.js"
+  },
+  "keywords": [
+    "openclaw",
+    "skill",
+    "healthcare",
+    "medications",
+    "swedish",
+    "fass",
+    "läkemedel",
+    "pharmacy",
+    "ai-agent",
+    "llm-tool"
+  ],
+  "author": "Birger Moëll <birger@moell.ai>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/birgermoell/swedish-medications.git"
+  },
+  "bugs": {
+    "url": "https://github.com/birgermoell/swedish-medications/issues"
+  },
+  "homepage": "https://birgermoell.github.io/swedish-medications",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "scripts/",
+    "references/",
+    "SKILL.md",
+    "README.md"
+  ]
+}
