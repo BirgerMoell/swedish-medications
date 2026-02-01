@@ -1,0 +1,41 @@
+{
+  "name": "swedish-medications",
+  "version": "1.0.1",
+  "description": "Swedish medication lookup skill for AI agents - FASS database integration",
+  "main": "scripts/fass_lookup.js",
+  "bin": {
+    "fass-lookup": "scripts/fass_lookup.js"
+  },
+  "keywords": [
+    "openclaw",
+    "skill",
+    "healthcare",
+    "medications",
+    "swedish",
+    "fass",
+    "läkemedel",
+    "pharmacy",
+    "ai-agent",
+    "llm-tool"
+  ],
+  "author": "Birger Moëll <birger@moell.ai>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/birgermoell/swedish-medications.git"
+  },
+  "homepage": "https://birgermoell.github.io/swedish-medications",
+  "metadata": {
+    "openclaw": {
+      "emoji": "💊",
+      "category": "healthcare",
+      "requires": {
+        "bins": ["node"]
+      }
+    }
+  },
+  "skill_files": {
+    "skill_md": "https://birgermoell.github.io/swedish-medications/skill.md",
+    "package_json": "https://birgermoell.github.io/swedish-medications/skill.json"
+  }
+}

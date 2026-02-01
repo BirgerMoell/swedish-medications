@@ -505,10 +505,27 @@ console.<span class="function">log</span>(med.dose);  <span class="comment">// "
             <p>This tool provides <strong>information only</strong>, not medical advice. Always consult healthcare professionals for medical decisions. Check <a href="https://fass.se">FASS.se</a> for complete official information.</p>
         </div>
         
+        <section>
+            <h2>📥 Alternative: URL-Based Install</h2>
+            <p>Don't want npm? Grab the skill files directly:</p>
+            <div class="code-block">
+                <code>
+<span class="comment"># Download skill files</span>
+mkdir -p ~/.openclaw/skills/swedish-medications
+curl -s https://birgermoell.github.io/swedish-medications/skill.md > ~/.openclaw/skills/swedish-medications/SKILL.md
+curl -s https://birgermoell.github.io/swedish-medications/skill.json > ~/.openclaw/skills/swedish-medications/package.json
+
+<span class="comment"># Or just read the skill directly from URL:</span>
+curl -s https://birgermoell.github.io/swedish-medications/skill.md
+                </code>
+            </div>
+        </section>
+        
         <section style="text-align: center;">
             <h2>📦 Get Started</h2>
             <a href="https://www.npmjs.com/package/swedish-medications" class="btn">View on npm</a>
             <a href="https://github.com/birgermoell/swedish-medications" class="btn btn-secondary">GitHub Repo</a>
+            <a href="./skill.md" class="btn btn-secondary">View SKILL.md</a>
         </section>
     </div>
     
