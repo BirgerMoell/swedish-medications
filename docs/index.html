@@ -289,12 +289,13 @@
     <div class="hero">
         <div class="flag">🇸🇪</div>
         <h1>Swedish Medications</h1>
-        <p class="tagline">FASS medication lookup for AI agents and developers</p>
+        <p class="tagline">Complete Swedish pharmaceutical database — 9,064 medications</p>
         
         <div class="badges">
             <a href="https://www.npmjs.com/package/swedish-medications">
                 <img src="https://badge.fury.io/js/swedish-medications.svg" alt="npm version">
             </a>
+            <img src="https://img.shields.io/badge/Medications-9,064-brightgreen.svg" alt="9,064 medications">
             <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License">
             <img src="https://img.shields.io/badge/OpenClaw-Skill-blue.svg" alt="OpenClaw Skill">
         </div>
@@ -302,6 +303,8 @@
         <div class="install-box">
             <code>npm install -g swedish-medications</code>
         </div>
+        
+        <p style="margin-top: 1.5rem; opacity: 0.8;">v2.0.0 — Full FASS database + 1,353 indexed substances</p>
     </div>
     
     <div class="container">
@@ -309,20 +312,20 @@
             <h2>✨ Features</h2>
             <div class="features">
                 <div class="feature-card">
-                    <h3>🔍 Quick Lookup</h3>
-                    <p>Search Swedish medications by brand name or active substance. Alvedon → paracetamol, Ipren → ibuprofen.</p>
+                    <h3>📊 9,064 Medications</h3>
+                    <p>Complete Swedish pharmaceutical database. Every medication approved in Sweden — from Alvedon to Ozempic to rare specialty drugs.</p>
                 </div>
                 <div class="feature-card">
-                    <h3>💊 Key Information</h3>
-                    <p>Get dosage, warnings, OTC status, and ATC codes instantly. Links to official FASS documentation.</p>
+                    <h3>🔍 Smart Search</h3>
+                    <p>Search by brand name, substance, or partial match. Multi-result search with <code>--search</code> flag. 1,353 indexed substances.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💊 Rich Details</h3>
+                    <p>Dosage, warnings, OTC status, ATC codes, manufacturer info. Curated data for common meds + full database for everything else.</p>
                 </div>
                 <div class="feature-card">
                     <h3>🤖 AI-Agent Ready</h3>
-                    <p>Works seamlessly with OpenClaw, LangChain, and custom agent frameworks as a tool/skill.</p>
-                </div>
-                <div class="feature-card">
-                    <h3>🇸🇪 Swedish Context</h3>
-                    <p>Built specifically for Swedish healthcare. Understands receptfritt/receptbelagt, Swedish brand names, and regional practices.</p>
+                    <p>Works seamlessly with OpenClaw, LangChain, and custom agent frameworks. Perfect for healthcare chatbots and assistants.</p>
                 </div>
             </div>
         </section>
@@ -417,57 +420,62 @@ console.<span class="function">log</span>(med.dose);  <span class="comment">// "
         </section>
         
         <section>
-            <h2>💊 Supported Medications</h2>
-            <p>Quick-lookup database includes:</p>
+            <h2>💊 Complete Database</h2>
+            <p><strong>9,064 medications</strong> across all categories:</p>
             
             <table>
                 <thead>
                     <tr>
                         <th>Category</th>
-                        <th>Substances</th>
-                        <th>Example Brands</th>
+                        <th>Examples</th>
+                        <th>Coverage</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>Pain & Fever</td>
-                        <td>Paracetamol, Ibuprofen, Diclofenac</td>
-                        <td>Alvedon, Ipren, Voltaren</td>
+                        <td>Alvedon, Ipren, Voltaren, Tramadol, Oxycontin</td>
+                        <td>✅ Full</td>
                     </tr>
                     <tr>
-                        <td>Allergies</td>
-                        <td>Loratadin, Cetirizin</td>
-                        <td>Clarityn, Zyrtec</td>
-                    </tr>
-                    <tr>
-                        <td>Stomach</td>
-                        <td>Omeprazol</td>
-                        <td>Losec</td>
+                        <td>ADHD</td>
+                        <td>Concerta, Elvanse, Ritalin, Strattera, Attentin</td>
+                        <td>✅ Full</td>
                     </tr>
                     <tr>
                         <td>Mental Health</td>
-                        <td>Sertralin</td>
-                        <td>Zoloft</td>
+                        <td>Zoloft, Cipralex, Sobril, Imovane, Lyrica</td>
+                        <td>✅ Full</td>
                     </tr>
                     <tr>
                         <td>Diabetes</td>
-                        <td>Metformin</td>
-                        <td>Glucophage</td>
+                        <td>Ozempic, Metformin, Jardiance, Lantus, NovoRapid</td>
+                        <td>✅ Full</td>
                     </tr>
                     <tr>
-                        <td>Cholesterol</td>
-                        <td>Atorvastatin</td>
-                        <td>Lipitor</td>
+                        <td>Heart & Blood</td>
+                        <td>Waran, Eliquis, Metoprolol, Enalapril</td>
+                        <td>✅ Full</td>
+                    </tr>
+                    <tr>
+                        <td>Asthma</td>
+                        <td>Ventoline, Symbicort, Pulmicort, Bricanyl</td>
+                        <td>✅ Full</td>
                     </tr>
                     <tr>
                         <td>Antibiotics</td>
-                        <td>Amoxicillin</td>
-                        <td>Amimox</td>
+                        <td>Kåvepenin, Amoxicillin, Ciproxin, Azitromax</td>
+                        <td>✅ Full</td>
+                    </tr>
+                    <tr>
+                        <td>+ Everything else</td>
+                        <td>Cancer drugs, biologics, vaccines, rare diseases...</td>
+                        <td>✅ Full</td>
                     </tr>
                 </tbody>
             </table>
             
-            <p>For medications not in the quick-lookup database, the tool generates a FASS.se search link.</p>
+            <p style="margin-top: 1rem;"><strong>1,353 substances indexed</strong> — search by active ingredient or brand name.</p>
         </section>
         
         <section>

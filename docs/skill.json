@@ -1,7 +1,7 @@
 {
   "name": "swedish-medications",
-  "version": "1.0.1",
-  "description": "Swedish medication lookup skill for AI agents - FASS database integration",
+  "version": "2.0.0",
+  "description": "Complete Swedish pharmaceutical database — 9,064 medications, 1,353 substances indexed",
   "main": "scripts/fass_lookup.js",
   "bin": {
     "fass-lookup": "scripts/fass_lookup.js"

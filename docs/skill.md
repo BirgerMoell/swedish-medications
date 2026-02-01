@@ -1,14 +1,14 @@
 ---
 name: swedish-medications
-version: 1.0.1
-description: Look up Swedish medication information from FASS. Search by brand name or substance, get dosage, warnings, OTC status.
+version: 2.0.0
+description: Complete Swedish pharmaceutical database — 9,064 medications, 1,353 substances. Search any medication approved in Sweden.
 homepage: https://birgermoell.github.io/swedish-medications
 metadata: {"openclaw":{"emoji":"💊","category":"healthcare","requires":{"bins":["node"]}}}
 ---
 
 # Swedish Medications Skill
 
-Look up information about medications approved in Sweden using FASS (the official Swedish pharmaceutical database).
+**Complete Swedish pharmaceutical database** — 9,064 medications from FASS with 1,353 indexed substances.
 
 ## Skill Files
 
