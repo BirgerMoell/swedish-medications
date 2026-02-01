@@ -185,16 +185,35 @@ module.exports = {
 if (require.main === module) {
   const args = process.argv.slice(2);
   
-  if (args.length === 0) {
-    console.log('Usage: node fass_lookup.js <medication_name>');
-    console.log('Example: node fass_lookup.js paracetamol');
-    console.log('Example: node fass_lookup.js alvedon');
-    console.log('');
+  const showHelp = () => {
+    console.log('🇸🇪 Swedish Medications - FASS Lookup\n');
+    console.log('Usage: fass-lookup <medication_name>');
+    console.log('       fass-lookup paracetamol');
+    console.log('       fass-lookup Alvedon');
+    console.log('       fass-lookup "alvedon 500mg"\n');
+    console.log('Options:');
+    console.log('  -h, --help     Show this help message');
+    console.log('  -l, --list     List all medications in quick-lookup\n');
     console.log('Available medications in quick-lookup:');
     Object.keys(COMMON_MEDICATIONS).forEach(m => {
       console.log(`  - ${m} (${COMMON_MEDICATIONS[m].brands.join(', ')})`);
     });
-    process.exit(1);
+    console.log('\nFor medications not listed, a FASS.se search link is provided.');
+  };
+  
+  if (args.length === 0 || args.includes('-h') || args.includes('--help')) {
+    showHelp();
+    process.exit(0);
+  }
+  
+  if (args.includes('-l') || args.includes('--list')) {
+    console.log('Available medications:\n');
+    Object.entries(COMMON_MEDICATIONS).forEach(([name, info]) => {
+      console.log(`${name} (${info.brands.join(', ')})`);
+      console.log(`  Use: ${info.use}`);
+      console.log(`  OTC: ${info.otc === true ? 'Yes' : info.otc === false ? 'No (Rx)' : info.otc}\n`);
+    });
+    process.exit(0);
   }
   
   const query = args.join(' ');
