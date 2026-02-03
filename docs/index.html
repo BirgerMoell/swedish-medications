@@ -335,6 +335,7 @@
             
             <div class="tabs">
                 <button class="tab active" onclick="showTab('openclaw')">OpenClaw Agent</button>
+                <button class="tab" onclick="showTab('codex')">Codex App</button>
                 <button class="tab" onclick="showTab('cli')">CLI Tool</button>
                 <button class="tab" onclick="showTab('library')">Node.js Library</button>
             </div>
@@ -354,6 +355,25 @@ skills:
 <span class="string">"Tell me about sertralin side effects"</span>
 <span class="string">"Is Ipren prescription-only in Sweden?"</span>
                     </code>
+                </div>
+            </div>
+
+            <div id="codex" class="tab-content">
+                <div class="code-block">
+                    <code>
+<span class="comment"># Clone the repo</span>
+git clone https://github.com/birgermoell/swedish-medications.git
+
+<span class="comment"># Copy into Codex skills directory</span>
+mkdir -p ~/.codex/skills
+cp -R swedish-medications ~/.codex/skills/swedish-medications
+                    </code>
+                </div>
+                <p style="margin-top: 0.75rem;">Then restart the Codex app. The skill will appear as <strong>Swedish Medications</strong> in the skills list.</p>
+                <div class="warning-box" style="margin-top: 1rem;">
+                    <h4>Notes</h4>
+                    <p>The Codex app reads <code>SKILL.md</code> and <code>agents/openai.yaml</code> from <code>~/.codex/skills/swedish-medications</code>.</p>
+                    <p>If you update the repo, re-copy the folder into <code>~/.codex/skills/</code> and restart Codex.</p>
                 </div>
             </div>
             
