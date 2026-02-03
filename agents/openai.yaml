@@ -1,0 +1,5 @@
+interface:
+  display_name: "Swedish Medications"
+  short_description: "Look up Swedish medication info (FASS)"
+  icon_small: "./assets/swedish-medications.svg"
+  icon_large: "./assets/swedish-medications.svg"

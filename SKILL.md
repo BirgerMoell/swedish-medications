@@ -9,21 +9,43 @@ Look up information about medications approved in Sweden using FASS (the officia
 
 ## Quick Start
 
-Search for a medication:
+CLI lookup:
 ```bash
-node scripts/fass_lookup.js "paracetamol"
+fass-lookup paracetamol
+fass-lookup Alvedon
+fass-lookup "alvedon 500mg"
 ```
 
-Or with Python:
+Node.js usage:
+```javascript
+const { lookupMedication, findMedication, searchMedications, getDatabaseStats } = require('swedish-medications');
+
+// Formatted markdown output
+console.log(lookupMedication('Alvedon'));
+
+// Raw data
+const med = findMedication('ibuprofen');
+console.log(med.dose);
+
+// Multi-result search
+console.log(searchMedications('insulin', 5));
+
+// Database stats
+console.log(getDatabaseStats());
+```
+
+Direct script (dev/test):
 ```bash
-python3 scripts/fass_lookup.py "paracetamol"
+node scripts/fass_lookup.js "paracetamol"
 ```
 
 ## Capabilities
 
 - **Search medications** by name (brand or generic/substance)
+- **Multi-result search** for category queries ("show me insulin medications")
 - **Get detailed info**: dosage, side effects, interactions, contraindications
 - **Swedish health context**: ATC codes, prescription status, regional recommendations
+- **FASS links** for official information
 
 ## Usage Patterns
 
@@ -31,6 +53,7 @@ python3 scripts/fass_lookup.py "paracetamol"
 When a user asks "What is Alvedon?" or "Tell me about paracetamol":
 1. Run the lookup script with the medication name
 2. Present key info: what it's for, dosage, common side effects
+3. Include the FASS link for official information
 
 ### Interaction Check
 When a user asks "Can I take X with Y?":
@@ -44,12 +67,36 @@ When a user asks about dosing:
 2. Present standard adult dosage
 3. Note: Always recommend following prescribed dosage or consulting pharmacist
 
+### Category Search
+When a user asks "What ADHD medications are available?" or "Search insulin medications":
+1. Use multi-result search
+2. Return a short list of matches
+3. Offer to expand any item
+
+## API Reference
+
+### `lookupMedication(query: string): string`
+Returns formatted markdown with medication info and FASS link.
+
+### `findMedication(query: string): object | null`
+Returns raw medication data object. Checks curated list first, then full database.
+
+### `searchMedications(query: string, limit?: number): array`
+Returns multiple matching medications (new in v2.0).
+
+### `getDatabaseStats(): object`
+Returns `{ curated: 23, full: 9064, substances: 1353 }`.
+
+### `getFassUrl(query: string): string`
+Returns the FASS.se search URL for a query.
+
 ## Important Notes
 
 - This skill provides **information only**, not medical advice
 - Always recommend consulting healthcare professionals for medical decisions
 - Swedish medications may have different names than international equivalents
 - Some medications require prescription (receptbelagt) in Sweden
+ - Check FASS.se for the most complete official details
 
 ## Data Sources
 

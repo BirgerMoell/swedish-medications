@@ -29,6 +29,25 @@ skills:
   - swedish-medications
 ```
 
+### For Codex App
+
+Add the skill to the Codex app by copying this repo into your Codex skills folder:
+
+```bash
+# Clone the repo
+git clone https://github.com/birgermoell/swedish-medications.git
+
+# Copy into Codex skills directory
+mkdir -p ~/.codex/skills
+cp -R swedish-medications ~/.codex/skills/swedish-medications
+```
+
+Then restart the Codex app. The skill will appear as **Swedish Medications** in the skills list.
+
+Notes:
+- The Codex app reads `SKILL.md` and `agents/openai.yaml` from `~/.codex/skills/swedish-medications`.
+- If you update the repo, re-copy the folder into `~/.codex/skills/` and restart Codex.
+
 ### As a CLI Tool
 
 ```bash

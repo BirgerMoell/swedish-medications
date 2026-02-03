@@ -1,90 +1,83 @@
 ---
 name: swedish-medications
 version: 2.0.0
-description: Complete Swedish pharmaceutical database — 9,064 medications, 1,353 substances. Search any medication approved in Sweden.
+description: Look up Swedish medication information from FASS (Farmaceutiska Specialiteter i Sverige). Use when users ask about medications, drugs, läkemedel, dosages, side effects (biverkningar), interactions, or need to understand prescriptions in Sweden. Covers all medications approved for use in Sweden.
 homepage: https://birgermoell.github.io/swedish-medications
 metadata: {"openclaw":{"emoji":"💊","category":"healthcare","requires":{"bins":["node"]}}}
 ---
 
 # Swedish Medications Skill
 
-**Complete Swedish pharmaceutical database** — 9,064 medications from FASS with 1,353 indexed substances.
-
-## Skill Files
-
-| File | URL |
-|------|-----|
-| **SKILL.md** (this file) | `https://birgermoell.github.io/swedish-medications/skill.md` |
-| **package.json** (metadata) | `https://birgermoell.github.io/swedish-medications/skill.json` |
-
-**Install via npm (recommended):**
-```bash
-npm install -g swedish-medications
-```
-
-**Or install locally via curl:**
-```bash
-mkdir -p ~/.openclaw/skills/swedish-medications
-curl -s https://birgermoell.github.io/swedish-medications/skill.md > ~/.openclaw/skills/swedish-medications/SKILL.md
-curl -s https://birgermoell.github.io/swedish-medications/skill.json > ~/.openclaw/skills/swedish-medications/package.json
-```
-
-**Or just read from URLs directly!**
+Look up information about medications approved in Sweden using FASS (the official Swedish pharmaceutical database).
 
 ## Quick Start
 
-### CLI Usage
+CLI lookup:
 ```bash
 fass-lookup paracetamol
 fass-lookup Alvedon
-fass-lookup --help
-fass-lookup --list
+fass-lookup "alvedon 500mg"
 ```
 
-### Node.js Usage
-```javascript
-const { lookupMedication, findMedication } = require('swedish-medications');
+Codex app install (local):
+```bash
+git clone https://github.com/birgermoell/swedish-medications.git
+mkdir -p ~/.codex/skills
+cp -R swedish-medications ~/.codex/skills/swedish-medications
+```
+Restart the Codex app, then enable **Swedish Medications** from the skills list.
 
-// Get formatted markdown
+Node.js usage:
+```javascript
+const { lookupMedication, findMedication, searchMedications, getDatabaseStats } = require('swedish-medications');
+
+// Formatted markdown output
 console.log(lookupMedication('Alvedon'));
 
-// Get raw data
+// Raw data
 const med = findMedication('ibuprofen');
 console.log(med.dose);  // "Adult: 200-400mg every 4-6h, max 1200mg/day (OTC)"
+
+// Multi-result search
+console.log(searchMedications('insulin', 5));
+
+// Database stats
+console.log(getDatabaseStats());
 ```
 
 ## Capabilities
 
 - **Search medications** by name (brand or generic/substance)
 - **Brand mapping**: Alvedon → paracetamol, Ipren → ibuprofen, Zoloft → sertralin
+- **Multi-result search** for category queries ("show me insulin medications")
 - **Key info**: dosage, side effects, warnings, OTC status, ATC codes
 - **FASS links** for complete official information
 
-## When to Use This Skill
+## Usage Patterns
 
-Use when users ask about:
-- Swedish medications by name ("What is Alvedon?")
-- Dosage questions ("How much ibuprofen can I take?")
-- OTC status ("Do I need a prescription for Losec?")
-- Side effects or warnings
-- Brand vs generic equivalents
+### Basic Lookup
+When a user asks "What is Alvedon?" or "Tell me about paracetamol":
+1. Run the lookup script with the medication name
+2. Present key info: what it's for, dosage, common side effects
+3. Include the FASS link for official information
 
-## Available Medications (Quick Lookup)
+### Interaction Check
+When a user asks "Can I take X with Y?":
+1. Look up both medications
+2. Check the interactions section
+3. Recommend consulting healthcare provider for complex cases
 
-| Substance | Brands | Use |
-|-----------|--------|-----|
-| Paracetamol | Alvedon, Panodil, Pamol | Pain, fever |
-| Ibuprofen | Ipren, Ibumetin, Brufen | Pain, inflammation |
-| Omeprazol | Losec | Acid reflux, ulcers |
-| Sertralin | Zoloft | Depression, anxiety |
-| Metformin | Glucophage | Type 2 diabetes |
-| Atorvastatin | Lipitor | Cholesterol |
-| Loratadin | Clarityn | Allergies |
-| Cetirizin | Zyrtec | Allergies |
-| Diklofenak | Voltaren | Pain, arthritis |
-| Amoxicillin | Amimox | Bacterial infections |
+### Dosage Questions
+When a user asks about dosing:
+1. Look up the medication
+2. Present standard adult dosage
+3. Note: Always recommend following prescribed dosage or consulting pharmacist
 
-For medications not in the quick-lookup, a FASS.se search link is provided.
+### Category Search
+When a user asks "What ADHD medications are available?" or "Search insulin medications":
+1. Use multi-result search
+2. Return a short list of matches
+3. Offer to expand any item
 
 ## API Reference
 
@@ -92,13 +85,16 @@ For medications not in the quick-lookup, a FASS.se search link is provided.
 Returns formatted markdown with medication info and FASS link.
 
 ### `findMedication(query: string): object | null`
-Returns raw medication data object or null if not found.
+Returns raw medication data object. Checks curated list first, then full database.
 
 ### `getFassUrl(query: string): string`
 Returns the FASS.se search URL for a query.
 
-### `COMMON_MEDICATIONS: object`
-The raw medications database object.
+### `searchMedications(query: string, limit?: number): array`
+Returns multiple matching medications (new in v2.0).
+
+### `getDatabaseStats(): object`
+Returns `{ curated: 23, full: 9064, substances: 1353 }`.
 
 ## Important Notes
 
@@ -112,9 +108,3 @@ The raw medications database object.
 - **[FASS.se](https://fass.se)** - Official Swedish pharmaceutical information
 - **[Läkemedelsverket](https://lakemedelsverket.se)** - Swedish Medical Products Agency
 - **[1177.se](https://1177.se)** - Swedish healthcare guide
-
-## Links
-
-- **npm:** https://www.npmjs.com/package/swedish-medications
-- **GitHub:** https://github.com/birgermoell/swedish-medications
-- **Landing page:** https://birgermoell.github.io/swedish-medications
